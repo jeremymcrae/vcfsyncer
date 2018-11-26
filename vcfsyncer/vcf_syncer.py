@@ -82,7 +82,7 @@ class VCFSyncer:
         
         refs = sorted(self.cache['refs'])
         if len(refs) == 0:
-            self.fill_cache()
+            self._fill_cache()
             refs = sorted(self.cache['refs'])
         
         ref = refs[0]
@@ -129,7 +129,7 @@ class VCFSyncer:
                 break
             yield x
     
-    def fill_cache(self):
+    def _fill_cache(self):
         """ fill cache with variants at the same site
         """
         
