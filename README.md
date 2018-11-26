@@ -17,12 +17,10 @@ from vcfsyncer import VCFSyncer
 synced = VCFSyncer(PATH_A, PATH_B, PATH_C)
 
 # you can iterate through the synchronized VCFs
-for group in synced:
-    for match in group:
-        print(match)
+for var in synced:
+    print(var.chrom, var.pos)
 
 # alternatively, fetch regions from the synchronized VCFs (if tabix-indexed)
-for group in synced.fetch(chrom='1', start=1000000, end=2000000):
-    for match in group:
-        print(match)
+for var in synced.fetch(chrom='1', start=1000000, end=2000000):
+    print(var.chrom, var.pos)
 ```
