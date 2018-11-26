@@ -1,4 +1,5 @@
 
+from vcfsyncer.multisample import MultiSamples
 
 class MultiVariantRecord(object):
     ''' represent variants from different VCFs, at same site, as single object
@@ -19,7 +20,7 @@ class MultiVariantRecord(object):
         self.filter = [x.filter for x in variants]
         self.format = [x.format for x in variants]
         self.info = [x.info for x in variants]
-        self.samples = [sample for var in variants for sample in var.samples]
+        self.samples = MultiSamples(*[x.samples for x in variants])
         self.id = [x.id for x in variants]
         self.qual = [x.qual for x in variants]
     
