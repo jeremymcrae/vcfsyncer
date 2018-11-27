@@ -105,15 +105,15 @@ class VCFSyncer:
                 except StopIteration:
                     self.vcfs[i] = None
                     self.variants[i] = None
-                
-                # avoid variants on non-standard chromosomes, otherwise we easily
-                # get out of sync
-                while self.variants[i] is not None and self.variants[i].chrom not in self.chroms:
-                    try:
-                        self.variants[i] = next(self.vcfs[i])
-                    except StopIteration:
-                        self.vcfs[i] = None
-                        self.variants[i] = None
+            
+            # avoid variants on non-standard chromosomes, otherwise we easily
+            # get out of sync
+            while self.variants[i] is not None and self.variants[i].chrom not in self.chroms:
+                try:
+                    self.variants[i] = next(self.vcfs[i])
+                except StopIteration:
+                    self.vcfs[i] = None
+                    self.variants[i] = None
         
         try:
             self.leading = self._first()
