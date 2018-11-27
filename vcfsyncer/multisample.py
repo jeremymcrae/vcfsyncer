@@ -1,44 +1,56 @@
 
+from itertools import chain
 from warnings import warn
 
 class MultiSamples(object):
-    def __init__(self, *args):
-        self.samples = {}
+    def __init__(self, *samples):
+        
+        self.samples = samples
         self.idx = {}
-        self.merge(*args)
+        self._index_groups()
     
-    def merge(self, *samples):
-        for group in samples:
-            for sample, values in group.items():
-                if sample in self.samples:
+    def _index_groups(self):
+        ''' identify which VCF each sample is in
+        
+        Allows quick data access by sample ID, without changing data around.
+        '''
+        
+        for i, group in enumerate(self.samples):
+            for sample in group:
+                if sample in self.idx:
                     warn('duplicate sample across VCFs: {}'.format(sample))
-                    continue
                 
-                self.idx[len(self.samples)] = sample
-                self.samples[sample] = values
+                self.idx[sample] = i
     
     def __len__(self):
-        return len(self.samples)
+        return sum(len(x for x in self.samples))
     
     def __getitem__(self, key):
+        ''' access sample data either by sample ID (str), or index offset (int)
+        '''
         if isinstance(key, int):
             assert 0 <= key < len(self)
-            return self.samples[self.idx[key]]
-        if key in self:
-            return self.samples[key]
+            for group in self.samples:
+                if key < len(group):
+                    return group[key]
+                key -= len(group)
         
+        if key in self:
+            group = self.idx[key]
+            return self.samples[group][key]
+    
     def __iter__(self):
-        for x in self.samples:
-            yield x
+        for sample_id in self.idx:
+            yield sample_id
     
     def __contains__(self, key):
-        return key in self.samples or 0 <= key < len(self.samples)
+        return key in self.idx or 0 <= key < len(self)
     
     def keys(self):
-        return self.samples.keys()
+        return self.idx
         
     def values(self):
-        return self.samples.values()
+        return chain(x.values() for x in self.samples)
         
     def pop(self, key):
         value = self[key]

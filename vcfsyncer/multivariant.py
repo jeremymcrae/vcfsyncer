@@ -7,7 +7,7 @@ class MultiVariantRecord(object):
     You'll need to be careful about accessing the attributes afterwards, since
     the chrom, pos and ref attributes are valid, whereas alts is now a
     deduplicated list of alts from the variant records, info is a list of info
-    dictionaries, and samples is a list of sample records.
+    dictionaries, and samples is a specialised class which mimics the pysam API.
     
     Possibly could be better integrated?
     '''
