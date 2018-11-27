@@ -4,7 +4,6 @@ import pysam
 from vcfsyncer.variant import MultiVariantRecord
 
 CHROMS = list(map(str, range(1, 23))) + ['X', 'Y', 'MT']
-CHROMS = CHROMS + ['chr' + x for x in CHROMS]
 
 class VCFSyncer:
     """ this synchronises the coordinates of multiple VCFs
@@ -25,8 +24,13 @@ class VCFSyncer:
         if chromosomes is None:
             chromosomes = CHROMS
         
-        self.chrom_to_int = dict(zip(chromosomes, range(len(chromosomes))))
-        self.chroms = set(chromosomes)
+        # ensure VCFs sort by chrom correctly. Strip any 'chr' prefix, then
+        # convert to dict, chrom map to list position, and finally add another
+        # set of chromosomes with chr prefixes, but with same sort order.
+        chromosomes = [x.lstrip('chr') for x in chromosomes]
+        self.chroms = dict(zip(chromosomes, range(len(chromosomes))))
+        for k in list(self.chroms):
+            self.chroms['chr' + k] = self.chroms[k]
         
         self.vcfs = list(args)
         if type(self.vcfs[0]) == str:
@@ -52,7 +56,7 @@ class VCFSyncer:
         ''' convert a chromosome to an integer for correct sorting
         '''
         try:
-            return self.chrom_to_int[chrom]
+            return self.chroms[chrom]
         except KeyError:
             # allow for non-standard contigs
             return abs(hash(chrom))
