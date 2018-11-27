@@ -1,5 +1,5 @@
 
-from vcfsyncer.multisample import MultiSamples
+from vcfsyncer.sample import MultiSamples
 
 class MultiVariantRecord(object):
     ''' represent variants from different VCFs, at same site, as single object

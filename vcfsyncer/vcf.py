@@ -1,7 +1,7 @@
 
 import pysam
 
-from vcfsyncer.multivariant import MultiVariantRecord
+from vcfsyncer.variant import MultiVariantRecord
 
 CHROMS = list(map(str, range(1, 23))) + ['X', 'Y', 'MT']
 CHROMS = CHROMS + ['chr' + x for x in CHROMS]
