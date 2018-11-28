@@ -19,7 +19,13 @@ class MultiVariantRecord(object):
         self.alts = variants
         self.filter = [x.filter for x in variants]
         self.format = [x.format for x in variants]
-        self.info = [x.info for x in variants]
+        self.info = []
+        for var in variants:
+            # track the alts within each info object
+            info = var.info
+            info['alts'] = var.alts
+            self.info.append(info)
+        
         self.samples = MultiSamples(*[x.samples for x in variants])
         self.id = [x.id for x in variants]
         self.qual = [x.qual for x in variants]

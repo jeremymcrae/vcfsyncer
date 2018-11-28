@@ -36,6 +36,10 @@ class VCFSyncer:
         if type(self.vcfs[0]) == str:
             self.vcfs = [pysam.VariantFile(x) for x in self.vcfs]
         
+        # add header field, so we can store alts within INFO dicts from each VCF
+        for x in self.vcfs:
+            x.header.add_line('##INFO=<ID=alts,Number=A,Type=String,Description="Alternate alleles">')
+        
         self.variants = [ next(x) for x in self.vcfs ]
         self.leading = self._first()
         self.cache = {'chrom': None, 'pos': None, 'refs': {}}
