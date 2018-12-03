@@ -23,7 +23,7 @@ class MultiSamples(object):
                 self.idx[sample] = i
     
     def __len__(self):
-        return sum(len(x for x in self.samples))
+        return sum(len(x) for x in self.samples)
     
     def __getitem__(self, key):
         ''' access sample data either by sample ID (str), or index offset (int)
