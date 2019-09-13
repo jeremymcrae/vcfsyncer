@@ -35,7 +35,7 @@ class MultiVariantRecord(object):
         return self._alts
     @alts.setter
     def alts(self, variants):
-        self._alts = (alt for var in variants for alt in var.alts)
+        self._alts = (alt for var in variants if var.alts for alt in var.alts)
         seen = set()
         self._alts = [x for x in self._alts if not (x in seen or seen.add(x))]
     
