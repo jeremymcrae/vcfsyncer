@@ -23,7 +23,7 @@ class MultiVariantRecord(object):
         for var in variants:
             # track the alts within each info object
             info = var.info
-            info['alts'] = var.alts
+            info['alts'] = var.alts if var.alts else []
             self.info.append(info)
         
         self.samples = MultiSamples(*[x.samples for x in variants])

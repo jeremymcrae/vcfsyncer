@@ -8,7 +8,7 @@ class TestVCFSyncer(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         paths = ['a.vcf.gz', 'b.vcf.gz', 'c.vcf.gz', 'no_samples.vcf.gz',
-            'unknown_chrom.vcf.gz']
+            'unknown_chrom.vcf.gz', 'no_alts.vcf.gz']
         labels = [x.split('.')[0] for x in paths]
         paths = [resource_filename(__name__, 'data/' + x) for x in paths]
         self.paths = dict(zip(labels, paths))
@@ -107,3 +107,13 @@ class TestVCFSyncer(unittest.TestCase):
         # check across a wider position range
         vars = vcf.fetch('2', 179415987, 179447000)
         self.assertEqual([x.pos for x in vars], [179415988, 179446218])
+    
+    def test_no_alt_allele(self):
+        ''' test that we can load VCFs with sites without ALT alleles
+        
+        These lines can occur when we want to indicate that a genomic position
+        (or range) matches the reference genome.
+        '''
+        vcf = VCFSyncer(self.paths['no_alts'], self.paths['a'])
+        var = next(vcf)
+        self.assertEqual(var.pos, 10337)
