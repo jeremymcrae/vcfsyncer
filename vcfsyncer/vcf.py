@@ -34,7 +34,7 @@ class VCFSyncer:
         
         self.vcfs = list(args)
         if type(self.vcfs[0]) == str:
-            self.vcfs = [pysam.VariantFile(x) for x in self.vcfs]
+            self.vcfs = [pysam.VariantFile(str(x)) for x in self.vcfs]
         
         # add header field, so we can store alts within INFO dicts from each VCF
         for x in self.vcfs:
