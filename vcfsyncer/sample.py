@@ -44,7 +44,10 @@ class MultiSamples(object):
             yield sample_id
     
     def __contains__(self, key):
-        return key in self.idx or 0 <= key < len(self)
+        if isinstance(key, str):
+            return key in self.idx
+        else: 
+            return 0 <= key < len(self)
     
     def keys(self):
         return self.idx
